@@ -1,0 +1,1 @@
+An Intelligent Mushroom Monitoring System is designed to enhance the cultivation of mushrooms by providing real-time monitoring and control of environmental conditions. The system ensures optimal growing conditions, improves yield, and reduces the risk of diseases and contamination.
