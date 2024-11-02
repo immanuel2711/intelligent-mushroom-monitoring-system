@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Data and Image Upload</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            overflow: hidden; /* Prevent body scrolling */
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto; /* Add a top margin to move the content down */
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: auto; /* Use auto height */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align items to the top */
+            overflow-y: auto; /* Allow vertical scrolling if needed */
+            max-height: calc(100vh - 40px); /* Set a max height for scrolling */
+        }
+        h1 {
+            text-align: center;
+            color: #6DBE45;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #6DBE45;
+            padding-bottom: 10px;
+        }
+        .batch-status {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffe0b2; /* Light background for status */
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        .sensor-data {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e9f5e9;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        .sensor-data p {
+            font-size: 1.2em;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px; /* Adjusted margin for spacing */
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            width: 80%;
+            font-size: 1em;
+        }
+        input[type="submit"] {
+            background-color: #6DBE45;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #5a9e38;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Batch Status Section -->
+        <div class="batch-status">
+            <h2>Batch Status</h2>
+            <p>Your batch is currently in the incubation stage.</p>
+        </div>
+
+        <!-- Sensor Data Section -->
+        <div class="sensor-data">
+            <p><strong>Temperature:</strong> {{ data['temperature'] }}</p>
+            <p><strong>Humidity:</strong> {{ data['humidity'] }}</p>
+            <p>
+                {% if data['temperature'] and data['humidity'] %}
+                    {% if data['temperature'] > 15 and data['temperature'] < 30 and data['humidity'] > 40 and data['humidity'] < 70 %}
+                        Your batch is in optimal condition.
+                    {% else %}
+                        Your batch requires attention. Check temperature and humidity levels.
+                    {% endif %}
+                {% else %}
+                    Data not available to determine batch condition.
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Upload Image for Processing Section -->
+        <h2 id="uploadHeader">Upload Image for Processing</h2>
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <input type="submit" value="Upload">
+        </form>
+
+        <div class="result" id="resultContainer">
+            <h2>Processing Result</h2>
+            <p><strong>Mushroom Status:</strong> {{ result }}</p>
+            <p>Your mushrooms are now ready for harvest!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            // Hide the form and header
+            document.getElementById('uploadHeader').style.display = 'none';
+            this.style.display = 'none';
+            // Show the result container
+            document.getElementById('resultContainer').style.display = 'block';
+            // Optionally, you can submit the form via AJAX here if you want to handle the result dynamically.
+            // For now, we just show the result statically.
+        };
+    </script>
+</body>
+</html>
